@@ -21,12 +21,11 @@ public:
 		next = node;
 	}
 
-	void recurPrint(Node* node)
+	void recurPrint()
 	{
-		if (node == nullptr) return;
-
-		cout << " (" << node << ") " << node->item << " [" << node->next << "]" << endl;
-		recurPrint(node->next);
+		cout << " (" << this << ") " << this->item << " [" << this->next << "]" << endl;
+		if (this->next != nullptr)
+			this->next->recurPrint();
 	}
 };
 
@@ -39,5 +38,5 @@ int main()
 	first.setNext(&second);
 	second.setNext(&third);
 	third.setNext(&fourth);
-	first.recurPrint(&first);
+	first.recurPrint();
 }
