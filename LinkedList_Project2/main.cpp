@@ -46,8 +46,14 @@ template <class Type>
 class linkedListType
 {
 public:
-	const linkedListType<Type>& operator= (const linkedListType<Type>&);
-	//Overload the assignment operator.
+	const linkedListType<Type>& operator= (const linkedListType<Type>& otherList)
+	{
+		if (this != &otherList)
+		{
+			copyList(otherList);
+		}
+		return *this;
+	}
 	void initializeList();
 	//Initialize the list to an empty state.
 	//Postcondition: first = nullptr, last = nullptr,
@@ -133,11 +139,50 @@ protected:
 	nodeType<Type>* first; //pointer to the first node of the list
 	nodeType<Type>* last; //pointer to the last node of the list
 private:
-	void copyList(const linkedListType<Type>& otherList);
-	//Function to make a copy of otherList.
-	//Postcondition: A copy of otherList is created and
-	// assigned to this list.
-};template <class Type>
+	void copyList(const linkedListType<Type>& otherList)
+	{
+		nodeType<Type>* newNode;
+		nodeType<Type>* current;
+
+		if (first != nullptr)	destroyList();
+
+		if (otherList.first == nullptr)
+		{
+			first = nullptr;
+			last = nullptr;
+			count = 0;
+		}
+		else
+		{
+			current = otherList.first;
+			count = otherList.count;
+
+			first = new nodeType<Type>;
+
+			first->info = current->info;
+			first->link = nullptr;
+
+			last = first;
+			
+			current = current->link;
+
+			while (current != nullptr)
+			{
+				newNode = new nodeType<Type>;
+				newNode->info = current->info;
+				newNode->link = nullptr;
+
+				last->link = newNode;
+				last = newNode;
+
+				current = current->link;
+			}
+		}
+	}
+};
+
+
+template <class Type>
 class unorderedLinkedList : public linkedListType<Type>
 {
 public:
