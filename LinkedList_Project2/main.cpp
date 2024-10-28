@@ -17,27 +17,33 @@ public:
 	{
 		current = nullptr;
 	}
+
 	linkedListIterator(nodeType<Type>* ptr)
 	{
 		current = ptr;
 	}
+
 	Type operator*()
 	{
 		return current->info;
 	}
+
 	linkedListIterator<Type> operator++()
 	{
 		current = current->link;
 		return *this;
 	}
+
 	bool operator==(const linkedListIterator<Type>& right) const
 	{
 		return (current == right.current);
 	}
+
 	bool operator!=(const linkedListIterator<Type>& right) const
 	{
 		return (current != right.current);
 	}
+
 private:
 	nodeType<Type>* current;
 };
@@ -54,90 +60,101 @@ public:
 		}
 		return *this;
 	}
-	void initializeList();
-	//Initialize the list to an empty state.
-	//Postcondition: first = nullptr, last = nullptr,
-	// count = 0;
-	bool isEmptyList() const;
-	//Function to determine whether the list is empty.
-	//Postcondition: Returns true if the list is empty,
-	// otherwise it returns false.
-	void print() const;
-	//Function to output the data contained in each node.
-	//Postcondition: none
-	int length() const;
-	//Function to return the number of nodes in the list.
-	//Postcondition: The value of count is returned.
-	void destroyList();
-	//Function to delete all the nodes from the list.
-	//Postcondition: first = nullptr, last = nullptr,
-	// count = 0;
-	Type front() const;
-	//Function to return the first element of the list.
-	//Precondition: The list must exist and must not be
-	// empty.
-	//Postcondition: If the list is empty, the program
-	// terminates; otherwise, the first
-	// element of the list is returned.
+	void initializeList()
+	{
+		destroyList();
+	}
 
-	Type back() const;
-	//Function to return the last element of the list.
-	//Precondition: The list must exist and must not be
-	// empty.
-	//Postcondition: If the list is empty, the program
-	// terminates; otherwise, the last
-	// element of the list is returned.
+	bool isEmptyList() const
+	{
+		return (first == nullptr);
+	}
+
+	void print() const
+	{
+		nodeType<Type>* current;
+		current = first;
+
+		while (current != nullptr)
+		{
+			cout << current->info << " ";
+			current = current->link;
+		}
+	}
+
+	int length() const
+	{
+		return count;
+	}
+
+	void destroyList()
+	{
+		nodeType<Type>* temp;
+
+		while (first != nullptr)
+		{
+			temp = first;
+			first = first->link;
+			delete temp;
+		}
+		last = nullptr;
+		count = 0;
+	}
+
+	Type front() const
+	{
+		assert(first != nullptr);
+		return first->info;
+	}
+
+	Type back() const
+	{
+		assert(last != nullptr);
+		return last->info;
+	}
+
 	virtual bool search(const Type& searchItem) const = 0;
-	//Function to determine whether searchItem is in the list.
-	//Postcondition: Returns true if searchItem is in the
-	// list, otherwise the value false is
-	// returned.
+	
 	virtual void insertFirst(const Type& newItem) = 0;
-	//Function to insert newItem at the beginning of the list.
-	//Postcondition: first points to the new list, newItem is
-	// inserted at the beginning of the list,
-	// last points to the last node in the list,
-	// and count is incremented by 1.
+	
 	virtual void insertLast(const Type& newItem) = 0;
-	//Function to insert newItem at the end of the list.
-	//Postcondition: first points to the new list, newItem
-	// is inserted at the end of the list,
-	// last points to the last node in the
-	// list, and count is incremented by 1.
+	
 	virtual void deleteNode(const Type& deleteItem) = 0;
-	//Function to delete deleteItem from the list.
-	//Postcondition: If found, the node containing
-	// deleteItem is deleted from the list.
-	// first points to the first node, last
-	// points to the last node of the updated
-	// list, and count is decremented by 1.
-	linkedListIterator<Type> begin();
-	//Function to return an iterator at the begining of
-	//the linked list.
-	//Postcondition: Returns an iterator such that current
-	// is set to first.
-	linkedListIterator<Type> end();
-	//Function to return an iterator one element past the
-	//last element of the linked list.
-	//Postcondition: Returns an iterator such that current
-	// is set to nullptr.
-	linkedListType();
-	//Default constructor
-	//Initializes the list to an empty state.
-	//Postcondition: first = nullptr, last = nullptr,
-	// count = 0;
+	
+	linkedListIterator<Type> begin()
+	{
+		linkedListIterator<Type> temp(first);
+		return temp;
+	}
 
-	linkedListType(const linkedListType<Type>&otherList);
-	//copy constructor
-	~linkedListType();
-	//Destructor
-	//Deletes all the nodes from the list.
-	//Postcondition: The list object is destroyed.
+	linkedListIterator<Type> end()
+	{
+		linkedListIterator<Type> temp(nullptr);
+		return temp;
+	}
+
+	linkedListType()
+	{
+		first = nullptr;
+		last = nullptr;
+		count = 0;
+	}
+
+	linkedListType(const linkedListType<Type>& otherList)
+	{
+		first = nullptr;
+		copyList(otherList);
+	}
+
+	~linkedListType()
+	{
+		destroyList();
+	}
+
 protected:
-	int count; //variable to store the number of
-	//elements in the list
-	nodeType<Type>* first; //pointer to the first node of the list
-	nodeType<Type>* last; //pointer to the last node of the list
+	int count;
+	nodeType<Type>* first;
+	nodeType<Type>* last;
 private:
 	void copyList(const linkedListType<Type>& otherList)
 	{
@@ -186,33 +203,118 @@ template <class Type>
 class unorderedLinkedList : public linkedListType<Type>
 {
 public:
-	bool search(const Type& searchItem) const;
-	//Function to determine whether searchItem is in the list.
-	//Postcondition: Returns true if searchItem is in the
-	// list, otherwise the value false is
-	// returned.
-	void insertFirst(const Type& newItem);
-	//Function to insert newItem at the beginning of the list.
-	//Postcondition: first points to the new list, newItem is
-	// inserted at the beginning of the list,
-	// last points to the last node in the
-	// list, and count is incremented by 1.
-	void insertLast(const Type& newItem);
-	//Function to insert newItem at the end of the list.
-	//Postcondition: first points to the new list, newItem
-	// is inserted at the end of the list,
-	// last points to the last node in the
- // list, and count is incremented by 1.
-	void deleteNode(const Type& deleteItem);
-	//Function to delete deleteItem from the list.
-	//Postcondition: If found, the node containing
-	// deleteItem is deleted from the list.
-	// first points to the first node, last
-	// points to the last node of the updated
-	// list, and count is decremented by 1.
+	bool search(const Type& searchItem) const
+	{
+		nodeType<Type>* current;
+		bool found = false;
+
+		current = this->first;
+
+		while (current != nullptr && !found)
+		{
+			if (current->info == searchItem)
+				found = true;
+			else
+				current = current->link;
+		}
+
+		return found;
+	}
+
+	void insertFirst(const Type& newItem)
+	{
+		nodeType<Type>* newNode;
+		newNode = new nodeType<Type>;
+
+		newNode->info = newItem;
+		newNode->link = this->first;
+
+		this->first = newNode;
+		this->count++;
+
+		if (this->last == nullptr)
+			this->last = newNode;
+	}
+
+	void insertLast(const Type& newItem)
+	{
+		nodeType<Type>* newNode;
+		newNode = new nodeType<Type>;
+
+		newNode->info = newItem;
+		newNode->link = nullptr;
+
+		if (this->first == nullptr)
+		{
+			this->first = newNode;
+			this->last = newNode;
+			this->count++;
+		}
+		else
+		{
+			this->last->link = newNode;
+			this->last = newNode;
+			this->count++;
+		}
+	}
+
+	void deleteNode(const Type& deleteItem)
+	{
+		nodeType<Type>* current;
+		nodeType<Type>* trailCurrent;
+		bool found;
+
+		if (this->first == nullptr)
+			cout << "Cannot delete from an empty list." << endl;
+		else
+		{
+			if (this->first->info == deleteItem)
+			{
+				current = this->first;
+				this->first = this->first->link;
+				this->count--;
+
+				if (this->first == nullptr)
+					this->last = nullptr;
+
+				delete current;
+			}
+			else
+			{
+				found = false;
+				trailCurrent = this->first;
+
+				current = this->first->link;
+
+				while (current != nullptr && !found)
+				{
+					if (current->info != deleteItem)
+					{
+						trailCurrent = current;
+						current = current->link;
+					}
+					else
+						found = true;
+				}
+
+				if (found)
+				{
+					trailCurrent->link = current->link;
+					this->count--;
+
+					if (this->last == current)
+						this->last = trailCurrent;
+
+					delete current;
+				}
+				else
+					cout << "The item to be deleted is not in the list." << endl;
+			}
+		}
+	}
 };
 
 int main()
 {
-
+	
 }
