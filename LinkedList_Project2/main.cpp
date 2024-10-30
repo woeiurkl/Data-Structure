@@ -120,6 +120,12 @@ public:
 	virtual void insertLast(const Type& newItem) = 0;
 	
 	virtual void deleteNode(const Type& deleteItem) = 0;
+
+	// Project 2
+
+	virtual void delSmallest() = 0;
+
+	virtual void deleteAllbyInfo(const Type& deleteItem) = 0;
 	
 	linkedListIterator<Type> begin()
 	{
