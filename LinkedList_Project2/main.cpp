@@ -121,8 +121,6 @@ public:
 	
 	virtual void deleteNode(const Type& deleteItem) = 0;
 
-	// Project 2
-
 	virtual void delSmallest() = 0;
 
 	virtual void deleteAllbyInfo(const Type& deleteItem) = 0;
@@ -318,9 +316,98 @@ public:
 			}
 		}
 	}
+
+	void delSmallest()
+	{
+		if (this->first == nullptr)	return;
+
+		if (this->first->link == nullptr)
+		{
+			this->destroyList();
+			return;
+		}
+
+		nodeType<Type>* smallest;
+		nodeType<Type>* current;
+
+		smallest = this->first;
+		current = smallest->link;
+
+		while (current != nullptr)
+		{
+			if (current->info < smallest->info)
+				smallest = current;
+
+			current = current->link;
+		}
+
+		deleteNode(smallest->info);
+	}
+
+	void deleteAllbyInfo(const Type& deleteItem)
+	{
+		nodeType<Type>* current;
+		nodeType<Type>* trailCurrent;
+		nodeType<Type>* temp;
+
+		if (this->first == nullptr)	return;
+
+		while (this->first != nullptr && this->first->info == deleteItem)
+		{
+			temp = this->first;
+			this->first = this->first->link;
+			delete temp;
+			this->count--;
+		}
+
+		if (this->first == nullptr)
+		{
+			this->last = nullptr;
+			return;
+		}
+
+		trailCurrent = this->first;
+		current = trailCurrent->link;
+
+		while (current != nullptr)
+		{
+			if (current->info == deleteItem)
+			{
+				temp = current;
+				trailCurrent->link = current->link;
+				current = current->link;
+
+				if (temp == this->last)
+					this->last = trailCurrent;
+
+				delete temp;
+				this->count--;
+			}
+			else
+			{
+				trailCurrent = current;
+				current = current->link;
+			}
+		}
+	}
 };
 
 int main()
 {
-	
+	unorderedLinkedList<int> test;
+	test.insertFirst(1);
+	test.insertFirst(2);
+	test.insertFirst(1);
+	test.insertFirst(3);
+	test.insertLast(4);
+	test.insertLast(1);
+	test.insertLast(1);
+	test.insertLast(2);
+	test.print();
+	test.delSmallest();
+	cout << endl << "\ndelSmallest" << endl;
+	test.print();
+	test.deleteAllbyInfo(1);
+	cout << endl << "\ndeleteAllbyInfo" << endl;
+	test.print();
 }
