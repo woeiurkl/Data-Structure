@@ -408,6 +408,6 @@ int main()
 	cout << endl << "\ndelSmallest" << endl;
 	test.print();
 	test.deleteAllbyInfo(1);
-	cout << endl << "\ndeleteAllbyInfo" << endl;
+	cout << endl << "\ndeleteAllbyInfo: 1" << endl;
 	test.print();
 }
